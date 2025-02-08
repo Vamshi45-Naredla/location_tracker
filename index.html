@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Tracker</title>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(sendLocation, showError);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        function sendLocation(position) {
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+            
+            // Send data to your backend
+            fetch("https://your-backend-url.com/location", { // Replace with your actual backend URL
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ latitude, longitude })
+            });
+
+            alert(`Location sent: ${latitude}, ${longitude}`);
+        }
+
+        function showError(error) {
+            alert("Location access denied or unavailable.");
+        }
+    </script>
+</head>
+<body onload="getLocation()">
+    <h2>Location Tracker</h2>
+    <p>If you see a prompt, please allow location access.</p>
+</body>
+</html>
