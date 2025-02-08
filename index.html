@@ -17,18 +17,38 @@
             let latitude = position.coords.latitude;
             let longitude = position.coords.longitude;
             
-            // Send data to your backend
-            fetch("https://app-py-xc5g.onrender.com", { // Replace with your actual backend URL
+            fetch("https://app-py-xc5g.onrender.com/location", { // ✅ Replace with your backend URL
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ latitude, longitude })
+            })
+            .then(response => response.json()) 
+            .then(data => {
+                alert(`✅ Location Sent: ${latitude}, ${longitude}`);
+                console.log("Server Response:", data);
+            })
+            .catch(error => {
+                console.error("❌ Error sending location:", error);
+                alert("Failed to send location.");
             });
-
-            alert(`Location sent: ${latitude}, ${longitude}`);
         }
 
         function showError(error) {
-            alert("Location access denied or unavailable.");
+            let message = "";
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    message = "❌ User denied location access.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    message = "❌ Location information unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    message = "⏳ Location request timed out.";
+                    break;
+                default:
+                    message = "❌ Unknown error occurred.";
+            }
+            alert(message);
         }
     </script>
 </head>
