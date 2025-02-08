@@ -3,26 +3,34 @@
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(sendLocation, showError);
         } else {
-            alert("Geolocation is not supported by this browser.");
+            alert("❌ Geolocation is not supported by this browser.");
         }
     }
 
     function sendLocation(position) {
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
-        
-        // ✅ Use correct API URL
-        fetch("https://app-py-xc5g.onrender.com/location", {  
+
+        console.log(`📍 Latitude: ${latitude}, Longitude: ${longitude}`);  // ✅ Debugging
+
+        fetch("https://app-py-xc5g.onrender.com/location", {  // ✅ Ensure your backend is running
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ latitude, longitude })
         })
         .then(response => response.json())
-        .then(data => alert(`Server Response: ${JSON.stringify(data)}`))
-        .catch(error => alert(`Error sending location: ${error}`));
+        .then(data => {
+            console.log("✅ Server Response:", data);
+            alert(`✅ Location Sent: ${latitude}, ${longitude}`);
+        })
+        .catch(error => {
+            console.error("❌ Error sending location:", error);
+            alert(`❌ Error sending location: ${error.message}`);
+        });
     }
 
     function showError(error) {
-        alert("Location access denied or unavailable.");
+        console.error("❌ Location Error:", error);
+        alert("❌ Location access denied or unavailable.");
     }
 </script>
